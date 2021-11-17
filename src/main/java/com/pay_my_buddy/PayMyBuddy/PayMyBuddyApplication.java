@@ -30,7 +30,7 @@ public class PayMyBuddyApplication implements CommandLineRunner {
 		/*Iterable<Product> products = productService.getproducts();
 		products.forEach(product -> System.out.println(product.getName()));*/
 
-		Iterable<Animal> animal = animalService.getAnimals();
-		animal.forEach(animal1 -> System.out.println(animal1));
+		/*Iterable<Animal> animal = animalService.getAnimals();
+		animal.forEach(animal1 -> System.out.println(animal1));*/
 	}
 }

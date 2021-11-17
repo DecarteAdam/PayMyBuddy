@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,24 +17,27 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
       auth.inMemoryAuthentication()
-              .withUser("springuser").password(passwordEncoder().encode("spring123"))
+              .withUser("user@gmail.com").password(passwordEncoder().encode("user"))
               .roles("USER")
               .and()
-              .withUser("springadmin").password(passwordEncoder().encode("admin123"))
+              .withUser("admin").password(passwordEncoder().encode("admin"))
               .roles("ADMIN", "USER");
 }
     @Override
     public void configure(HttpSecurity http) throws Exception{
         http.authorizeRequests()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/user").hasRole("USER")
+                /*.antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasRole("USER")*/
+                //.antMatchers("/home").permitAll()
+                .antMatchers( "/registration**", "/js/**", "/styles/login/**", "/img/**")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .and()
-                .oauth2Login()
-                /*.loginPage("/login")
-                .permitAll()*/;
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/home", true)
+                        .loginPage("/login")
+                        .permitAll()
+                );
     }
 
     @Bean

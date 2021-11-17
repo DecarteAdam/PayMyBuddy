@@ -1,0 +1,28 @@
+.margin {
+    margin-top: 100px;
+}
+
+.card {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 10px
+}
+
+.login-logo {
+    display: flex;
+    justify-content: center;
+}
+.login-box-msg {
+    text-align: center;
+    border: 1px solid;
+    padding: 3px;
+    background: linear-gradient(0.25turn, #32d51e, #3cf642a6)
+}
+
+.input-group {
+    padding-bottom: 8px
+}
+
+.col-4 {
+    text-align: center
+}
