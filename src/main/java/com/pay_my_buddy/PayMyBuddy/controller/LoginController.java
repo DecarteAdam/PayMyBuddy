@@ -9,8 +9,10 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
@@ -24,7 +26,7 @@ public class LoginController {
         this.auth2AuthorizedClientService = auth2AuthorizedClientService;
     }
 
-    @RolesAllowed("USER")
+    /*@RolesAllowed("USER")
     @RequestMapping("/**")
     public String getUser()
     {
@@ -36,9 +38,21 @@ public class LoginController {
     public String getAdmin()
     {
         return "Welcome Admin";
+    }*/
+
+    @GetMapping("/login")
+    public ModelAndView login()
+    {
+        return new ModelAndView("/login");
+
     }
 
-    @RequestMapping("/*")
+    @GetMapping("/home")
+    public ModelAndView loginPage(){
+        return new ModelAndView("/home");
+    }
+
+    /*@RequestMapping("/*")
     public String getUserInfo(Principal user) {
         StringBuffer userInfo= new StringBuffer();
         if(user instanceof UsernamePasswordAuthenticationToken){
@@ -96,5 +110,5 @@ public class LoginController {
             return oidcUser.getIdToken();
         }
         return null;
-    }
+    }*/
 }
