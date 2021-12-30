@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
 
+    private int userId;
     private String userName;
     private String password;
     private boolean active;
@@ -19,6 +20,7 @@ public class CustomUserDetails implements UserDetails {
     private User user;
 
     public CustomUserDetails(User user) {
+        this.userId = user.getId();
         this.userName = user.getUsername();
         this.password = user.getPassword();
         this.authorities = Arrays.stream(user.getRole().split(","))
@@ -39,6 +41,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return userName;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     @Override

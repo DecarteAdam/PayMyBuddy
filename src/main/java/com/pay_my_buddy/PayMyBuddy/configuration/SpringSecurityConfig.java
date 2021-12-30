@@ -49,7 +49,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login").permitAll()
                     //.loginProcessingUrl("/home")
                     .defaultSuccessUrl("/home", true)
-                .permitAll();
+                    .permitAll()
+                .and()
+                .rememberMe()
+                .and()
+                .logout()
+                    .logoutUrl("/logout")
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID", "remember-me")
+                    .logoutSuccessUrl("/login");
     }
 
     @Bean
