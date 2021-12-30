@@ -9,12 +9,17 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "profile")
+@Table(name = "transactions")
 @Data
-public class Profile {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToOne
-    private User user;
+
+    private int userId;
+    private String connection;
+    private String description;
+    private int amount;
+    /*@OneToOne
+    private Profile profile;*/
 }

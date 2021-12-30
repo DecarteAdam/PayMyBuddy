@@ -8,10 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.Optional;
 
 @Service
+@SessionAttributes("user")
 public class UserDetailService implements UserDetailsService {
 
     /**
@@ -31,6 +33,13 @@ public class UserDetailService implements UserDetailsService {
 
     public User create(User user){
         return userRepository.save(user);
+    }
+
+    public User getUser(String username) throws UsernameNotFoundException {
+
+        Optional<User> user = userRepository.findByUsername(username);
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));
+        return new User();
     }
 
 
