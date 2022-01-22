@@ -38,25 +38,25 @@
         <div style="font-size: 30px; font-weight: 600;">Send Money</div>
         <button class="connection-btn">Add Conection</button>
     </div>
-    <div class="pay-block">
-        <div class="connection-block">
-            <select name="pets" id="pet-select" class="select-connection">
-                <option value="">Select A Connection</option>
-                <option value="adam">Adam</option>
-                <option value="theo">Théo</option>
-                <option value="julien">Julien</option>
-                <option value="romuald">Romuald</option>
-                <option value="thibaud">Thibaud</option>
-                <option value="samuel">Samuel</option>
-            </select>
-            <div>
-                <input type="number" style="width: 137px; height: 30px">
-                <i>€</i>
+    <form  th:action="@{/home}" th:object="${sendMoneyForm}" method="POST">
+        <div class="pay-block">
+            <div class="connection-block">
+                <select name="connection" id="connection-select" class="select-connection" th:field="${user}">
+                    <option value="">Select A Connection</option>
+                    <option th:each="contact : ${user.connections}"
+                            th:value="${contact}"
+                            th:text="${contact.firstname} + ' ' + ${contact.lastname}"></option>
+                </select>
+                <div>
+                    <td><input th:field="*{amount}" type="number" style="width: 137px; height: 30px"></td>
+                    <i>€</i>
+                </div>
+                <button type="submit" class="pay-btn">Pay</button>
             </div>
-            <button class="pay-btn">Pay</button>
-        </div>
 
-    </div>
+        </div>
+    </form>
+
 </div>
 <div class="title-block">
     <div>

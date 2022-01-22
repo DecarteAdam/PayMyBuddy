@@ -20,6 +20,4 @@ public class Transaction {
     private String connection;
     private String description;
     private int amount;
-    /*@OneToOne
-    private Profile profile;*/
 }
