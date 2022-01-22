@@ -27,6 +27,14 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
+    @OneToMany(fetch = FetchType.LAZY)
+    @Column(name = "user_connections", nullable = false)
+   // @JoinColumn(name = "id")
+    private List<User> connections;
+
+    public User(User user) {
+
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,6 +66,20 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", connections=" + connections +
+                '}';
     }
     /*@OneToOne
     private Profile profile;*/

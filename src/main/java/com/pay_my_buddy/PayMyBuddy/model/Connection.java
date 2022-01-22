@@ -2,19 +2,18 @@ package com.pay_my_buddy.PayMyBuddy.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "profile")
+@Table(name = "connection")
 @Data
-public class Profile {
+public class Connection extends User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private int id;
-    @OneToOne
-    private User user;
+
+    @Column(name = "user_id", nullable = false)
+    private int user_id;
 }
