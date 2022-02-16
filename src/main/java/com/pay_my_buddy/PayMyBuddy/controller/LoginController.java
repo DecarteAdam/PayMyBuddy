@@ -1,9 +1,11 @@
 package com.pay_my_buddy.PayMyBuddy.controller;
 
+import com.pay_my_buddy.PayMyBuddy.DTO.UserDTO;
 import com.pay_my_buddy.PayMyBuddy.data.UserRepository;
 import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.model.User;
+import com.pay_my_buddy.PayMyBuddy.service.ConnectionService;
 import com.pay_my_buddy.PayMyBuddy.service.SendMoneyForm;
 import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
 import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
@@ -33,15 +35,17 @@ public class LoginController {
     }
 
     @GetMapping("/home")
-    public ModelAndView homePage(Model model, SendMoneyForm form, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-
-        model.addAttribute("sendMoneyForm", form);
+    public ModelAndView homePage(Model model, SendMoneyForm sendMoneyForm, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        /*model.addAttribute("sendMoneyForm", sendMoneyForm);*/
 
         String username = customUserDetails.getUsername();
         User user =  userDetailsService.getUser(username);
         List<Transaction> transactions =  transactionService.getTransactions(user.getId());
+
+        List<UserDTO> connection = connectionService.getConnections(user);
         model.addAttribute("transactions", transactions);
         model.addAttribute("user", user);
+        model.addAttribute("connections", connection);
         return new ModelAndView("/home");
     }
 

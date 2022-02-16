@@ -38,17 +38,25 @@
         <div style="font-size: 30px; font-weight: 600;">Send Money</div>
         <button class="connection-btn">Add Conection</button>
     </div>
-    <form  th:action="@{/home}" th:object="${sendMoneyForm}" method="POST">
+    <form action="#" th:action="@{/sendMoney}"   method="POST">
         <div class="pay-block">
             <div class="connection-block">
-                <select name="connection" id="connection-select" class="select-connection" th:field="${user}">
-                    <option value="">Select A Connection</option>
-                    <option th:each="contact : ${user.connections}"
-                            th:value="${contact}"
-                            th:text="${contact.firstname} + ' ' + ${contact.lastname}"></option>
+                <select name="connection" id="connection-select" class="select-connection" th:field="*{user}">
+                    <option value="" selected>Select A Connection</option>
+                    <option th:each="connection : ${connections}"
+                            th:value="${connection.id}"
+                            th:text="${connection.getFirstname()} + ' ' + ${connection.getLastname()}"></option>
                 </select>
+
+                <!--<select th:field="*{connections}">
+                    <option th:each="contact : ${connections}"
+                            th:value="${contact.id}"
+                            th:text="#{${'seedstarter.type.' + contact}}">Wireframe</option>
+                </select>-->
+
+
                 <div>
-                    <td><input th:field="*{amount}" type="number" style="width: 137px; height: 30px"></td>
+                  <!--  <td><input th:field="*{sendMoneyForm.amount}" type="number" style="width: 137px; height: 30px"></td>-->
                     <i>€</i>
                 </div>
                 <button type="submit" class="pay-btn">Pay</button>
