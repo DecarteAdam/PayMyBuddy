@@ -1,7 +1,6 @@
 package com.pay_my_buddy.PayMyBuddy.controller;
 
 import com.pay_my_buddy.PayMyBuddy.DTO.UserDTO;
-import com.pay_my_buddy.PayMyBuddy.data.UserRepository;
 import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.model.User;
@@ -9,7 +8,6 @@ import com.pay_my_buddy.PayMyBuddy.service.ConnectionService;
 import com.pay_my_buddy.PayMyBuddy.service.SendMoneyForm;
 import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
 import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +21,12 @@ public class LoginController {
     private TransactionService transactionService;
     private UserDetailService userDetailsService;
 
-    public LoginController(TransactionService transactionService, UserDetailService userDetailsService) {
+    private ConnectionService connectionService;
+
+    public LoginController(TransactionService transactionService, UserDetailService userDetailsService, ConnectionService connectionService) {
         this.transactionService = transactionService;
         this.userDetailsService = userDetailsService;
+        this.connectionService = connectionService;
     }
 
 
