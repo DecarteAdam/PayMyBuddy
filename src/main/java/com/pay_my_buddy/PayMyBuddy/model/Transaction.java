@@ -19,5 +19,5 @@ public class Transaction {
     private int userId;
     private String connection;
     private String description;
-    private int amount;
+    private double amount;
 }

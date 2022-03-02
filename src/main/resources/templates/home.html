@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head >
+<head>
     <meta charset="utf-8">
-    <link th:href="@{/styles/home/home.css}" rel="stylesheet"  type="text/css"/>
+    <link th:href="@{/styles/home/home.css}" rel="stylesheet" type="text/css"/>
     <title>Login custom</title>
 </head>
 <body class="hold-transition login-page">
@@ -15,7 +15,8 @@
     color: white;
     font-size: 30px;
     font-weight: 500;
-    padding: 14px;">Pay My Buddy</div>
+    padding: 14px;">Pay My Buddy
+    </div>
     <div class="topnav">
         <a class="active" href="#home">Home</a>
         <a href="#news">Transfer</a>
@@ -33,62 +34,17 @@
 
 </div>
 
+<!--CONNECTIONS-->
 <div class="title-block">
     <div class="send-money-block">
         <div style="font-size: 30px; font-weight: 600;">Send Money</div>
-        <button class="connection-btn">Add Conection</button>
+        <button class="connection-btn">Add Connection</button>
     </div>
-    <form action="#" th:action="@{/sendMoney}"   method="POST">
-        <div class="pay-block">
-            <div class="connection-block">
-                <select name="connection" id="connection-select" class="select-connection" th:field="*{user}">
-                    <option value="" selected>Select A Connection</option>
-                    <option th:each="connection : ${connections}"
-                            th:value="${connection.id}"
-                            th:text="${connection.getFirstname()} + ' ' + ${connection.getLastname()}"></option>
-                </select>
-
-                <!--<select th:field="*{connections}">
-                    <option th:each="contact : ${connections}"
-                            th:value="${contact.id}"
-                            th:text="#{${'seedstarter.type.' + contact}}">Wireframe</option>
-                </select>-->
-
-
-                <div>
-                  <!--  <td><input th:field="*{sendMoneyForm.amount}" type="number" style="width: 137px; height: 30px"></td>-->
-                    <i>€</i>
-                </div>
-                <button type="submit" class="pay-btn">Pay</button>
-            </div>
-
-        </div>
-    </form>
-
+    <div th:replace="connection :: connection(${user }, ${sendMoneyForm})"></div>
 </div>
-<div class="title-block">
-    <div>
-        <div style="font-size: 30px; font-weight: 600;">My Transactions</div>
-    </div>
-        <div class="border">
-            <table class="content-table">
-                <thead>
-                <tr>
-                    <th>Connections</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="connection :${transactions}">
-                    <td th:text="${connection.connection}"></td>
-                    <td th:text="${connection.description}"></td>
-                    <td th:text="${connection.amount} + ' &euro;'"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+<!--TRANSACTIONS-->
+<div th:replace="transaction :: transaction(${transactions})"></div>
 
 </body>
 </html>

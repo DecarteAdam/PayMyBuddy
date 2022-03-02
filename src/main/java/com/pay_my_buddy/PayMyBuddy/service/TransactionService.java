@@ -18,4 +18,8 @@ public class TransactionService {
     public List<Transaction> getTransactions(int userId){
         return transactionRepository.findByUserId(userId);
     }
+
+    public void save(Transaction transaction){
+        transactionRepository.save(transaction);
+    }
 }

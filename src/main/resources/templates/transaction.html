@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Connections</title>
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+    <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+    <div th:fragment="transaction(transactions)" class="container">
+        <div class="title-block">
+            <div>
+                <div style="font-size: 30px; font-weight: 600;">My Transactions</div>
+            </div>
+            <div class="border">
+                <table class="content-table">
+                    <thead>
+                    <tr>
+                        <th>Connections</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="transaction :${transactions}">
+                        <td th:text="${transaction.connection}"></td>
+                        <td th:text="${transaction.description}"></td>
+                        <td th:text="${transaction.amount} + ' &euro;'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

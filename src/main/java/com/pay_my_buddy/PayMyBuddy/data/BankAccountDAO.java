@@ -1,16 +1,15 @@
 package com.pay_my_buddy.PayMyBuddy.data;
 
 import com.pay_my_buddy.PayMyBuddy.model.BankAccount;
-import com.pay_my_buddy.PayMyBuddy.model.BankAccountInfo;
+import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.service.BankTransactionException;
+import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.util.List;
 
 @Repository
 public class BankAccountDAO {
@@ -18,25 +17,28 @@ public class BankAccountDAO {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private TransactionService transactionService;
+
 
     public BankAccountDAO() {
     }
 
-    public BankAccount findById(Long id) {
+    public BankAccount findById(int id) {
         return this.entityManager.find(BankAccount.class, id);
     }
 
-    public List<BankAccountInfo> listBankAccountInfo() {
-        String sql = "Select new " + BankAccountInfo.class.getName() //
+   /* public List<BankAccount> listBankAccountInfo() {
+        String sql = "Select new " + BankAccount.class.getName() //
                 + "(e.id,e.fullName,e.balance) " //
                 + " from " + BankAccount.class.getName() + " e ";
-        Query query = entityManager.createQuery(sql, BankAccountInfo.class);
+        Query query = entityManager.createQuery(sql, BankAccount.class);
         return query.getResultList();
-    }
+    }*/
 
     // MANDATORY: Transaction must be created before.
     @Transactional(propagation = Propagation.MANDATORY )
-    public void addAmount(Long id, double amount) throws BankTransactionException {
+    public void addAmount(int id, double amount) throws BankTransactionException {
         BankAccount account = this.findById(id);
         if (account == null) {
             throw new BankTransactionException("Account not found " + id);
@@ -47,15 +49,24 @@ public class BankAccountDAO {
                     "The money in the account '" + id + "' is not enough (" + account.getBalance() + ")");
         }
         account.setBalance(newBalance);
+
+
     }
 
     // Do not catch BankTransactionException in this method.
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             rollbackFor = BankTransactionException.class)
-    public void sendMoney(Long fromAccountId, Long toAccountId, double amount) throws BankTransactionException {
+    public void sendMoney(int fromAccountId, int toAccountId, double amount, String user) throws BankTransactionException {
 
         addAmount(toAccountId, amount);
         addAmount(fromAccountId, -amount);
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(amount);
+        transaction.setUserId(fromAccountId);
+        transaction.setDescription("Transaction");
+        transaction.setConnection(user);
+        transactionService.save(transaction);
     }
 
 }
