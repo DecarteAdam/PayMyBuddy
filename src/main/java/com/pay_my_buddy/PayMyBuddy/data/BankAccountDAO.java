@@ -2,6 +2,7 @@ package com.pay_my_buddy.PayMyBuddy.data;
 
 import com.pay_my_buddy.PayMyBuddy.model.BankAccount;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
+import com.pay_my_buddy.PayMyBuddy.model.User;
 import com.pay_my_buddy.PayMyBuddy.service.BankTransactionException;
 import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotNull;
 
 @Repository
 public class BankAccountDAO {
@@ -28,16 +30,8 @@ public class BankAccountDAO {
         return this.entityManager.find(BankAccount.class, id);
     }
 
-   /* public List<BankAccount> listBankAccountInfo() {
-        String sql = "Select new " + BankAccount.class.getName() //
-                + "(e.id,e.fullName,e.balance) " //
-                + " from " + BankAccount.class.getName() + " e ";
-        Query query = entityManager.createQuery(sql, BankAccount.class);
-        return query.getResultList();
-    }*/
-
     // MANDATORY: Transaction must be created before.
-    @Transactional(propagation = Propagation.MANDATORY )
+    @Transactional(propagation = Propagation.MANDATORY)
     public void addAmount(int id, double amount) throws BankTransactionException {
         BankAccount account = this.findById(id);
         if (account == null) {
@@ -54,9 +48,11 @@ public class BankAccountDAO {
     }
 
     // Do not catch BankTransactionException in this method.
-    @Transactional(propagation = Propagation.REQUIRES_NEW,
-            rollbackFor = BankTransactionException.class)
-    public void sendMoney(int fromAccountId, int toAccountId, double amount, String user) throws BankTransactionException {
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
+    public void sendMoney(int fromAccountId,
+                          int toAccountId,
+                          double amount,
+                          @NotNull User user) throws BankTransactionException { //TODO: @NotBlank sanity check
 
         addAmount(toAccountId, amount);
         addAmount(fromAccountId, -amount);
@@ -64,8 +60,8 @@ public class BankAccountDAO {
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         transaction.setUserId(fromAccountId);
-        transaction.setDescription("Transaction");
-        transaction.setConnection(user);
+        transaction.setDescription("Transaction"); //TODO: Add input to add description in HTML page
+        transaction.setConnection(user.getFirstname().concat(" " + user.getLastname()));
         transactionService.save(transaction);
     }
 

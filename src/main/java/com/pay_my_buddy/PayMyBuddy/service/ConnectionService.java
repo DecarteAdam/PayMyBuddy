@@ -1,10 +1,13 @@
 package com.pay_my_buddy.PayMyBuddy.service;
 
 import com.pay_my_buddy.PayMyBuddy.DTO.UserDTO;
+import com.pay_my_buddy.PayMyBuddy.controller.LoginController;
 import com.pay_my_buddy.PayMyBuddy.data.RelationRepository;
 import com.pay_my_buddy.PayMyBuddy.data.UserRepository;
 import com.pay_my_buddy.PayMyBuddy.model.Connection;
 import com.pay_my_buddy.PayMyBuddy.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ConnectionService {
+    private  static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private RelationRepository relationRepository;
     @Autowired

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -20,4 +21,5 @@ public class Transaction {
     private String connection;
     private String description;
     private double amount;
+    private Date date = new Date();
 }

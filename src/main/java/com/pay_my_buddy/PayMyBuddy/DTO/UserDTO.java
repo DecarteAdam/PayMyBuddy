@@ -2,10 +2,12 @@ package com.pay_my_buddy.PayMyBuddy.DTO;
 
 import com.pay_my_buddy.PayMyBuddy.data.UserRepository;
 import com.pay_my_buddy.PayMyBuddy.model.User;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+@Data
 @Component
 public class UserDTO {
 
@@ -31,35 +33,4 @@ public class UserDTO {
         return this;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public List<UserDTO> getConnections() {
-        return connections;
-    }
-
-    public void setConnections(List<UserDTO> connections) {
-        this.connections = connections;
-    }
 }
