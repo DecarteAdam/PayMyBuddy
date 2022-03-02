@@ -25,6 +25,10 @@ public class User implements UserDetails {
     private String password;
     private String role;
 
+    @OneToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private BankAccount account;
+
     @ManyToMany //FetchType.LAZY by default
     @JoinTable(
             name = "user_connections",

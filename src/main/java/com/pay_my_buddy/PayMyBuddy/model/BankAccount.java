@@ -17,6 +17,4 @@ public class BankAccount {
     private int id;
     private String fullName;
     private double balance;
-/*
-
 }
