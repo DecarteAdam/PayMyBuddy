@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Connections</title>
+    
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+	crossorigin="anonymous">
+	<link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+    <div th:fragment="connection(user)" class="container">
+        <form action="#" th:action="@{/sendMoney}" th:object="${connection}" method="POST">
+            <div class="pay-block">
+                <div class="connection-block">
+                    <select name="connection" id="connection-select" class="select-connection"  >
+                        <option value="" selected>Select A Connection</option>
+                        <option th:each="connection : ${user.getConnections()}"
+                                th:value="${connection.getId()}"
+                                th:text="${connection.getEmail()}"></option>
+                    </select>
+
+                    <div>
+                        <td>
+                            <input th:field="${sendMoneyForm.amount}" type="number" style="width: 137px; height: 30px">
+                        </td>
+                        <i>€</i>
+                    </div>
+                    <button type="submit" class="pay-btn">Pay</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
