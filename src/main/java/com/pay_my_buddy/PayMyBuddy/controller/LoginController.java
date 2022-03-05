@@ -1,48 +1,21 @@
 package com.pay_my_buddy.PayMyBuddy.controller;
 
-import com.pay_my_buddy.PayMyBuddy.data.UserRepository;
-import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
-import com.pay_my_buddy.PayMyBuddy.model.Transaction;
-import com.pay_my_buddy.PayMyBuddy.model.User;
-import com.pay_my_buddy.PayMyBuddy.service.SendMoneyForm;
-import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
-import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
-@RestController
+@AllArgsConstructor
+@Controller
 public class LoginController {
-    private TransactionService transactionService;
-    private UserDetailService userDetailsService;
-
-    public LoginController(TransactionService transactionService, UserDetailService userDetailsService) {
-        this.transactionService = transactionService;
-        this.userDetailsService = userDetailsService;
-    }
+    private  static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 
     @GetMapping("/login")
     public ModelAndView login() {
+        logger.info("GET: /login");
         return new ModelAndView("/login");
     }
-
-    @GetMapping("/home")
-    public ModelAndView homePage(Model model, SendMoneyForm form, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-
-        model.addAttribute("sendMoneyForm", form);
-
-        String username = customUserDetails.getUsername();
-        User user =  userDetailsService.getUser(username);
-        List<Transaction> transactions =  transactionService.getTransactions(user.getId());
-        model.addAttribute("transactions", transactions);
-        model.addAttribute("user", user);
-        return new ModelAndView("/home");
-    }
-
 }

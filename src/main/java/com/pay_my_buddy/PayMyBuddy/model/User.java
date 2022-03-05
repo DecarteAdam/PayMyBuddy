@@ -1,8 +1,6 @@
 package com.pay_my_buddy.PayMyBuddy.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,12 +8,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "user")
 @Data
+@Entity
+@Table(name = "user")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +24,22 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
-    @OneToMany(fetch = FetchType.LAZY)
-    @Column(name = "user_connections", nullable = false)
-   // @JoinColumn(name = "id")
-    private List<User> connections;
 
-    public User(User user) {
+    @OneToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private BankAccount account;
 
-    }
+    @ManyToMany //FetchType.LAZY by default
+    @JoinTable(
+            name = "user_connections",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "connection_id"))
+    private Set<User> connections;
+
+    @OneToMany
+    @JoinColumn(name = "transaction_id", referencedColumnName = "id")
+    private Set<Transaction> transaction;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,21 +72,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                ", connections=" + connections +
-                '}';
-    }
-    /*@OneToOne
-    private Profile profile;*/
-
 }

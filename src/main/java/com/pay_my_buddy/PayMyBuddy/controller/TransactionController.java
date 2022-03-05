@@ -1,71 +1,59 @@
 package com.pay_my_buddy.PayMyBuddy.controller;
 
 import com.pay_my_buddy.PayMyBuddy.data.BankAccountDAO;
-import com.pay_my_buddy.PayMyBuddy.model.BankAccountInfo;
+import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
+import com.pay_my_buddy.PayMyBuddy.model.User;
 import com.pay_my_buddy.PayMyBuddy.service.BankTransactionException;
-import com.pay_my_buddy.PayMyBuddy.service.SendMoneyForm;
-import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
+import com.pay_my_buddy.PayMyBuddy.model.SendMoneyForm;
+import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
-@RestController
+@AllArgsConstructor
+@Controller
 public class TransactionController {
-    private TransactionService transactionService;
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
     @Autowired
     private BankAccountDAO bankAccountDAO;
 
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
+    private final UserDetailService userDetailsService;
 
 
-    /*@PostMapping("/transaction")
-    public String getTransactions(Transaction transaction){
+    @PostMapping(value = "/sendMoney")
+    public ModelAndView processSendMoney(@NotNull Model model,
+                                         @ModelAttribute("connection") User connection,
+                                         @NotNull SendMoneyForm sendMoneyForm,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        return transactionService.createtransaction();
-    }*/
+        String username = customUserDetails.getUsername();
+        User user = userDetailsService.getUser(username);
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String showBankAccounts(Model model) {
-        List<BankAccountInfo> list = bankAccountDAO.listBankAccountInfo();
-
-        model.addAttribute("accountInfos", list);
-
-        return "accountsPage";
-    }
-
-    @RequestMapping(value = "/sendMoney", method = RequestMethod.GET)
-    public ModelAndView viewSendMoneyPage(Model model) {
-
-        SendMoneyForm form = new SendMoneyForm(1L, 2L, 700d);
-
-        model.addAttribute("sendMoneyForm", form);
-
-        return new ModelAndView("home");
-    }
-
-
-
-    @RequestMapping(value = "/home", method = RequestMethod.POST)
-    public String processSendMoney(Model model, SendMoneyForm sendMoneyForm) {
-
-        System.out.println("Send Money: " + sendMoneyForm.getAmount());
+        logger.info("POST: /sendMoney");
+        model.addAttribute("user", user);
+        model.addAttribute("sendMoneyForm", sendMoneyForm);
 
         try {
-            bankAccountDAO.sendMoney(sendMoneyForm.getFromAccountId(), //
-                    sendMoneyForm.getToAccountId(), //
-                    sendMoneyForm.getAmount());
+            bankAccountDAO.sendMoney(
+                    user.getAccount().getId(),
+                    connection.getAccount().getId(),
+                    sendMoneyForm.getAmount(),
+                    connection);
         } catch (BankTransactionException e) {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "/home";
+            return new ModelAndView("/home");
         }
-        return "redirect:/home";
+        return new ModelAndView("redirect:/home");
     }
 }

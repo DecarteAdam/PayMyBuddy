@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 
-    User findByUsername(String username);
+    User findByUsername(String username); //TODO: @NotBlank
 
-    /*@Query("SELECT * FROM pay_my_buddy.user_connections inner join pay_ where ")
-    User getAllByUserUserId();*/
+    User findUserById(int id);
 }
