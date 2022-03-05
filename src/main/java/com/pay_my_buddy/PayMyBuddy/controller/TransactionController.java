@@ -2,6 +2,7 @@ package com.pay_my_buddy.PayMyBuddy.controller;
 
 import com.pay_my_buddy.PayMyBuddy.data.BankAccountDAO;
 import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
+import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.model.User;
 import com.pay_my_buddy.PayMyBuddy.service.BankTransactionException;
 import com.pay_my_buddy.PayMyBuddy.model.SendMoneyForm;
@@ -35,6 +36,7 @@ public class TransactionController {
     public ModelAndView processSendMoney(@NotNull Model model,
                                          @ModelAttribute("connection") User connection,
                                          @NotNull SendMoneyForm sendMoneyForm,
+                                         @NotNull Transaction transaction,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         String username = customUserDetails.getUsername();
@@ -43,11 +45,13 @@ public class TransactionController {
         logger.info("POST: /sendMoney");
         model.addAttribute("user", user);
         model.addAttribute("sendMoneyForm", sendMoneyForm);
+        model.addAttribute("description", transaction);
 
         try {
             bankAccountDAO.sendMoney(
                     user.getAccount().getId(),
                     connection.getAccount().getId(),
+                    transaction.getDescription(),
                     sendMoneyForm.getAmount(),
                     connection);
         } catch (BankTransactionException e) {

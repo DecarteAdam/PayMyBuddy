@@ -30,7 +30,6 @@ public class BankAccountDAO {
         return this.entityManager.find(BankAccount.class, id);
     }
 
-    // MANDATORY: Transaction must be created before.
     @Transactional(propagation = Propagation.MANDATORY)
     public void addAmount(int id, double amount) throws BankTransactionException {
         BankAccount account = this.findById(id);
@@ -43,15 +42,13 @@ public class BankAccountDAO {
                     "The money in the account '" + id + "' is not enough (" + account.getBalance() + ")");
         }
         account.setBalance(newBalance);
-
-
     }
 
-    // Do not catch BankTransactionException in this method.
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
-    public void sendMoney(int fromAccountId,
-                          int toAccountId,
-                          double amount,
+    public void sendMoney(@NotNull int fromAccountId,
+                          @NotNull int toAccountId,
+                          String description,
+                          @NotNull double amount,
                           @NotNull User user) throws BankTransactionException { //TODO: @NotBlank sanity check
 
         addAmount(toAccountId, amount);
@@ -60,7 +57,7 @@ public class BankAccountDAO {
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         transaction.setUserId(fromAccountId);
-        transaction.setDescription("Transaction"); //TODO: Add input to add description in HTML page
+        transaction.setDescription(description);
         transaction.setConnection(user.getFirstname().concat(" " + user.getLastname()));
         transactionService.save(transaction);
     }
