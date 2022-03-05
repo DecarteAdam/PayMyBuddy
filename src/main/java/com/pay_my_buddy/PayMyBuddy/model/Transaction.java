@@ -1,15 +1,11 @@
 package com.pay_my_buddy.PayMyBuddy.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "transactions")
 @Data
 public class Transaction {

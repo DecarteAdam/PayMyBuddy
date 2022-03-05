@@ -1,6 +1,5 @@
 package com.pay_my_buddy.PayMyBuddy.controller;
 
-import com.pay_my_buddy.PayMyBuddy.DTO.UserDTO;
 import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
 import com.pay_my_buddy.PayMyBuddy.model.SendMoneyForm;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @AllArgsConstructor
@@ -32,43 +32,42 @@ public class HomeController {
     private final ConnectionService connectionService;
 
 
-	@GetMapping("/home")
-	public ModelAndView homePage(Model model, SendMoneyForm sendMoneyForm, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-		logger.info("GET: /home");
-
-		String username = customUserDetails.getUsername();
-		User user =  userDetailsService.getUser(username);
-		//List<Transaction> transactions =  transactionService.getTransactions(user.getId());
-
-		List<UserDTO> connection = connectionService.getConnections(user);
-		//model.addAttribute("transactions", transactions);
-		model.addAttribute("user", user);
-		model.addAttribute("connections", connection);
-		model.addAttribute("sendMoneyForm", sendMoneyForm);
-		return getOnePage(model, 1, sendMoneyForm, customUserDetails);
-	}
+    @GetMapping("/home")
+    public ModelAndView homePage(@Valid Model model,
+                                 @Valid SendMoneyForm sendMoneyForm,
+                                 @Valid Transaction transaction,
+                                 @NotNull @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        logger.info("GET: /home");
+        return getOnePage(model, 1, sendMoneyForm, transaction, customUserDetails);
+    }
 
 
     @GetMapping("/home/page/{pageNumber}")
     public ModelAndView getOnePage(@Valid Model model,
                                    @PathVariable("pageNumber") int currentPage,
-                                   SendMoneyForm sendMoneyForm,
-                                   @AuthenticationPrincipal @Valid CustomUserDetails customUserDetails){
+                                   @Valid SendMoneyForm sendMoneyForm,
+                                   @Valid Transaction transaction,
+                                   @NotNull @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         String username = customUserDetails.getUsername();
-        User user =  userDetailsService.getUser(username);
+        User user = userDetailsService.getUser(username);
 
         Page<Transaction> page = transactionService.getTransactions(currentPage, user.getId());
         int totalPages = page.getTotalPages();
         long totalItems = page.getTotalElements();
         List<Transaction> transactions = page.getContent();
 
+        /*Populate home page*/
         model.addAttribute("user", user);
         model.addAttribute("sendMoneyForm", sendMoneyForm);
+        model.addAttribute("description", transaction);
+        model.addAttribute("transactions", transactions);
+
+        /*Elements linked with pagination*/
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
-        model.addAttribute("transactions", transactions);
+
 
         return new ModelAndView("/home");
     }
