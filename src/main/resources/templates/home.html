@@ -40,11 +40,11 @@
         <div style="font-size: 30px; font-weight: 600;">Send Money</div>
         <button class="connection-btn">Add Connection</button>
     </div>
-    <div th:replace="connection :: connection(${user })"></div>
+    <div th:replace="connection :: connection(${user})"></div>
 </div>
 
 <!--TRANSACTIONS-->
-<div th:replace="transaction :: transaction(${transactions})"></div>
+<div th:replace="transaction :: transaction(${transactions}, ${totalPages}, ${currentPage})"></div>
 
 </body>
 </html>

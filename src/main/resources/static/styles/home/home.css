@@ -26,6 +26,39 @@ body {
     color: blue;
 }
 
+.page {
+    overflow: hidden;
+    align-self: center;
+    border: 1px grey solid;
+}
+
+.page a {
+    float: left;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #0057ba;
+}
+
+.page a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.page a.active {
+    color: blue;
+}
+
+.page div.active {
+    color: grey;
+}
+
+.footer-center{
+    display: flex;
+    justify-content: center;
+}
+
 .connection-block{
     display: flex;
     justify-content: space-evenly;
