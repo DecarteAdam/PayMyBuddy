@@ -1,10 +1,12 @@
 package com.pay_my_buddy.PayMyBuddy.data;
 
+import com.pay_my_buddy.PayMyBuddy.exception.BankTransactionException;
 import com.pay_my_buddy.PayMyBuddy.model.BankAccount;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.model.User;
-import com.pay_my_buddy.PayMyBuddy.service.BankTransactionException;
 import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 @Repository
 public class BankAccountDAO {
+    private static final Logger logger = LoggerFactory.getLogger(BankAccountDAO.class);
 
     @Autowired
     private EntityManager entityManager;
@@ -30,8 +33,14 @@ public class BankAccountDAO {
         return this.entityManager.find(BankAccount.class, id);
     }
 
+    /**
+     * Transactional method to add amount and manage commits and rollbacks
+     * @param id of the account to send money
+     * @param amount of money
+     */
     @Transactional(propagation = Propagation.MANDATORY)
     public void addAmount(int id, double amount) throws BankTransactionException {
+        logger.info("Add amount: {} {}", id, amount);
         BankAccount account = this.findById(id);
         if (account == null) {
             throw new BankTransactionException("Account not found " + id);
@@ -44,12 +53,18 @@ public class BankAccountDAO {
         account.setBalance(newBalance);
     }
 
+    /**
+     * Transactional method to process transaction
+     */
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
     public void sendMoney(@NotNull int fromAccountId,
                           @NotNull int toAccountId,
                           String description,
                           @NotNull double amount,
-                          @NotNull User user) throws BankTransactionException { //TODO: @NotBlank sanity check
+                          @NotNull User user) throws BankTransactionException {
+        logger.info("Send fromAccountId: {}", fromAccountId);
+        logger.info("Send toAccountId: {}", toAccountId);
+        logger.info("Send user: {}", user);
 
         addAmount(toAccountId, amount);
         addAmount(fromAccountId, -amount);

@@ -4,7 +4,7 @@ import com.pay_my_buddy.PayMyBuddy.data.BankAccountDAO;
 import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.model.User;
-import com.pay_my_buddy.PayMyBuddy.service.BankTransactionException;
+import com.pay_my_buddy.PayMyBuddy.exception.BankTransactionException;
 import com.pay_my_buddy.PayMyBuddy.model.SendMoneyForm;
 import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
 import lombok.AllArgsConstructor;
@@ -32,6 +32,9 @@ public class TransactionController {
     private final UserDetailService userDetailsService;
 
 
+    /**
+     * Transaction endpoint to make a tra,saction
+     */
     @PostMapping(value = "/sendMoney")
     public ModelAndView processSendMoney(@NotNull Model model,
                                          @ModelAttribute("connection") User connection,
@@ -43,6 +46,7 @@ public class TransactionController {
         User user = userDetailsService.getUser(username);
 
         logger.info("POST: /sendMoney");
+
         model.addAttribute("user", user);
         model.addAttribute("sendMoneyForm", sendMoneyForm);
         model.addAttribute("description", transaction);
