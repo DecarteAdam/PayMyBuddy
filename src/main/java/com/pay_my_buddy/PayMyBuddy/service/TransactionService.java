@@ -14,10 +14,6 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
 
-    /*public List<Transaction> getTransactions(int userId){
-        return transactionRepository.findByUserIdOrderByDateDesc(userId);
-    }*/
-
     public Page<Transaction> getTransactions(int pageNumber, int userId){
         Pageable pageable = PageRequest.of(pageNumber -1,3);
         return transactionRepository.findByUserIdOrderByDateDesc(pageable, userId);

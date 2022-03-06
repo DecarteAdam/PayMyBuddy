@@ -1,4 +1,4 @@
-package com.pay_my_buddy.PayMyBuddy.service;
+package com.pay_my_buddy.PayMyBuddy.exception;
 
 public class BankTransactionException extends Exception {
 

@@ -12,7 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginController {
     private  static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-
+    /**
+     * Login endpoint to redirect to login page
+     */
     @GetMapping("/login")
     public ModelAndView login() {
         logger.info("GET: /login");

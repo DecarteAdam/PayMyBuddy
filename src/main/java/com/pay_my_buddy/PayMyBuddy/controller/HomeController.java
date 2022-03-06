@@ -4,7 +4,6 @@ import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
 import com.pay_my_buddy.PayMyBuddy.model.SendMoneyForm;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
 import com.pay_my_buddy.PayMyBuddy.model.User;
-import com.pay_my_buddy.PayMyBuddy.service.ConnectionService;
 import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
 import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
 import lombok.AllArgsConstructor;
@@ -29,9 +28,10 @@ public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final TransactionService transactionService;
     private final UserDetailService userDetailsService;
-    private final ConnectionService connectionService;
 
-
+    /**
+     * Home endpoint to load home page
+     */
     @GetMapping("/home")
     public ModelAndView homePage(@Valid Model model,
                                  @Valid SendMoneyForm sendMoneyForm,
@@ -41,7 +41,9 @@ public class HomeController {
         return getOnePage(model, 1, sendMoneyForm, transaction, customUserDetails);
     }
 
-
+    /**
+     * Home enpoint to populate home page
+     */
     @GetMapping("/home/page/{pageNumber}")
     public ModelAndView getOnePage(@Valid Model model,
                                    @PathVariable("pageNumber") int currentPage,
@@ -49,6 +51,7 @@ public class HomeController {
                                    @Valid Transaction transaction,
                                    @NotNull @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
+        logger.info("GET: /home/page/{}", currentPage);
         String username = customUserDetails.getUsername();
         User user = userDetailsService.getUser(username);
 

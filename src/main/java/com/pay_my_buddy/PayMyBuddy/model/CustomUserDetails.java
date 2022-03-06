@@ -11,16 +11,11 @@ import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
 
-    private int userId;
-    private String userName;
-    private String password;
-    private boolean active;
-    private List<GrantedAuthority> authorities;
-
-    private User user;
+    private final String userName;
+    private final String password;
+    private final List<GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
-        this.userId = user.getId();
         this.userName = user.getUsername();
         this.password = user.getPassword();
         this.authorities = Arrays.stream(user.getRole().split(","))
@@ -43,10 +38,6 @@ public class CustomUserDetails implements UserDetails {
         return userName;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -65,17 +56,5 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "CustomUserDetails{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", active=" + active +
-                ", authorities=" + authorities +
-                ", user=" + user +
-                '}';
     }
 }
