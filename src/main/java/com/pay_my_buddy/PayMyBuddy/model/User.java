@@ -21,7 +21,7 @@ public class User {
     private String role;
 
     @OneToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private BankAccount account;
 
     @ManyToMany //FetchType.LAZY by default
