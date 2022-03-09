@@ -52,12 +52,7 @@ public class TransactionController {
         model.addAttribute("description", transaction);
 
         try {
-            bankAccountDAO.sendMoney(
-                    user.getAccount().getId(),
-                    connection.getAccount().getId(),
-                    transaction.getDescription(),
-                    sendMoneyForm.getAmount(),
-                    connection);
+            bankAccountDAO.sendMoney(user, connection, transaction.getDescription(), sendMoneyForm.getAmount());
         } catch (BankTransactionException e) {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             return new ModelAndView("/home");

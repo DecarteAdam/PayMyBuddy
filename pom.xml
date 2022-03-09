@@ -95,6 +95,11 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>7.0.3.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot</artifactId>
+			<version>3.0.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
