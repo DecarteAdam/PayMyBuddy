@@ -16,7 +16,7 @@
                     <option value="" selected>Select A Connection</option>
                     <option th:each="connection : ${user.getConnections()}"
                             th:value="${connection.getId()}"
-                            th:text="${connection.getEmail()}"></option>
+                            th:text="${connection.getFirstname() + ' ' + connection.getLastname()}"></option>
                 </select>
 
                 <div>

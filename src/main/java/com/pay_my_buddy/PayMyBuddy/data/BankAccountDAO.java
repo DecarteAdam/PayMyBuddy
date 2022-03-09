@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
 @Repository
@@ -20,35 +19,26 @@ public class BankAccountDAO {
     private static final Logger logger = LoggerFactory.getLogger(BankAccountDAO.class);
 
     @Autowired
-    private EntityManager entityManager;
-
-    @Autowired
     private TransactionService transactionService;
-
-
-    public BankAccountDAO() {
-    }
-
-    public BankAccount findById(int id) {
-        return this.entityManager.find(BankAccount.class, id);
-    }
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
 
     /**
      * Transactional method to add amount and manage commits and rollbacks
-     * @param id of the account to send money
+     * @param accountNumber of the account to send money
      * @param amount of money
      */
     @Transactional(propagation = Propagation.MANDATORY)
-    public void addAmount(int id, double amount) throws BankTransactionException {
-        logger.info("Add amount: {} {}", id, amount);
-        BankAccount account = this.findById(id);
+    public void addAmount(String accountNumber, double amount) throws BankTransactionException {
+        logger.info("Add amount: {} {}", accountNumber, amount);
+        BankAccount account = this.bankAccountRepository.findBankAccountByBankAccountNumber(accountNumber);
         if (account == null) {
-            throw new BankTransactionException("Account not found " + id);
+            throw new BankTransactionException("Account not found " + accountNumber);
         }
         double newBalance = account.getBalance() + amount;
         if (account.getBalance() + amount < 0) {
             throw new BankTransactionException(
-                    "The money in the account '" + id + "' is not enough (" + account.getBalance() + ")");
+                    "The money in the account '" + accountNumber + "' is not enough (" + account.getBalance() + ")");
         }
         account.setBalance(newBalance);
     }
@@ -57,23 +47,21 @@ public class BankAccountDAO {
      * Transactional method to process transaction
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
-    public void sendMoney(@NotNull int fromAccountId,
-                          @NotNull int toAccountId,
+    public void sendMoney(@NotNull User user,
+                          @NotNull User connection,
                           String description,
-                          @NotNull double amount,
-                          @NotNull User user) throws BankTransactionException {
-        logger.info("Send fromAccountId: {}", fromAccountId);
-        logger.info("Send toAccountId: {}", toAccountId);
-        logger.info("Send user: {}", user);
+                          @NotNull double amount) throws BankTransactionException {
+        logger.info("Send fromAccount: {}", user.getAccount().getBankAccountNumber());
+        logger.info("Send toAccount: {}", connection.getAccount().getBankAccountNumber());
 
-        addAmount(toAccountId, amount);
-        addAmount(fromAccountId, -amount);
+        addAmount(connection.getAccount().getBankAccountNumber(), amount);
+        addAmount(user.getAccount().getBankAccountNumber(), -amount);
 
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
-        transaction.setUserId(fromAccountId);
+        transaction.setUserId(user.getId());
         transaction.setDescription(description);
-        transaction.setConnection(user.getFirstname().concat(" " + user.getLastname()));
+        transaction.setConnection(connection.getFirstname().concat(" " + connection.getLastname()));
         transactionService.save(transaction);
     }
 
