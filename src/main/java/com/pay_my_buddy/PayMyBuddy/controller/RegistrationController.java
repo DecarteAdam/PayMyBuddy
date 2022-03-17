@@ -37,10 +37,15 @@ public class RegistrationController {
         return new ModelAndView("/registration");
     }
 
+    /**
+     * Save new user
+     *
+     * @param userFormDTO   the form fulfilled by new user
+     * @param bindingResult for sanity check
+     */
     @PostMapping("/registration")
     public String registration(@Valid @ModelAttribute("userForm") UserFormDTO userFormDTO, BindingResult bindingResult, Model model) {
         logger.info("POST: /registration");
-
         return this.userDetailsService.registration(userFormDTO, bindingResult);
     }
 

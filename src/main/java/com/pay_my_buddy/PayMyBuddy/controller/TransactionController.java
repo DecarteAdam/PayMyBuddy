@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,6 +40,7 @@ public class TransactionController {
     public ModelAndView processSendMoney(@NotNull Model model,
                                          @ModelAttribute("connection") User connection,
                                          @NotNull SendMoneyForm sendMoneyForm,
+                                         BindingResult result,
                                          @NotNull Transaction transaction,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -55,15 +57,21 @@ public class TransactionController {
             bankAccountDAO.sendMoney(user, connection, transaction.getDescription(), sendMoneyForm.getAmount());
         } catch (BankTransactionException e) {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return new ModelAndView("/home");
+            return new ModelAndView("redirect:/home");
         }
         return new ModelAndView("redirect:/home");
     }
 
 
+    /**
+     * Get bill
+     *
+     * @param userId of the user
+     * @param date   of the transactions
+     */
     @GetMapping("/bill")
     public BillDTO getFacture(int userId,
-                              @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  @NotNull Date date) {
+                              @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NotNull Date date) {
         return this.transactionService.getTransactionByUserIdAndDate(userId, date);
     }
 }

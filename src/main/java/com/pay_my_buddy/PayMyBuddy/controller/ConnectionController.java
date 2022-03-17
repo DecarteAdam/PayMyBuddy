@@ -34,7 +34,8 @@ public class ConnectionController {
 
     /**
      * Add connection to the user
-     * @param id of the connection
+     *
+     * @param id                of the connection
      * @param customUserDetails the user connected
      */
     @PostMapping("/add-connection/{id}")
