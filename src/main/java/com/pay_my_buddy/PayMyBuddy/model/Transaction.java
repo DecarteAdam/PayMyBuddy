@@ -19,5 +19,8 @@ public class Transaction {
     private String connection;
     private String description;
     private double amount;
+    private double fees;
+    @Column(name="date", columnDefinition="TIMESTAMP(0)")
+    @Temporal(TemporalType.DATE)
     private Date date = new Date();
 }

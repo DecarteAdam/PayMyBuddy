@@ -192,3 +192,7 @@ body {
     padding-right: 25px;
     text-align: right;
 }
+
+.mt-8 {
+    margin-top: 8px;
+}

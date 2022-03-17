@@ -1,5 +1,6 @@
 package com.pay_my_buddy.PayMyBuddy.configuration;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,9 +39,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.csrf()
+                .disable()
                 .authorizeRequests()
-                .antMatchers("/styles/login/**", "/img/**")
+                .antMatchers("/registration**", "/bill", "/styles/login/**", "/img/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -69,5 +71,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

@@ -9,4 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findByUsername(@NotBlank String username);
+    User findByEmail(@NotBlank String email);
+
+    Boolean existsByEmail(String email);
 }
