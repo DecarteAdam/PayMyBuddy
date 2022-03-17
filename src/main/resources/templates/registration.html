@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create an account</title>
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/styles/login/login.css}" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div class="login-box margin">
+    <div class="login-logo">
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Pay My Buddy</p>
+                <p>Create your account</p>
+                <form th:object="${userForm}" th:action="@{/registration}" method="post">
+                    <div class="input-group mb-3">
+                        <input type="text" th:field="*{firstname}" required class="form-control" placeholder="First name">
+                        <span class="has-error" th:if="${#fields.hasErrors('firstname')}"
+                              th:errors="*{firstname}"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" th:field="*{lastname}" required class="form-control" placeholder="Last name">
+                        <span class="has-error" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" th:field="*{email}" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                               class="form-control" placeholder="Enter your email">
+                        <span class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" th:field="*{password}" required class="form-control"
+                               placeholder="Enter your password">
+                        <span class="has-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="password" th:field="*{passwordconfirm}" required
+                               class="form-control" placeholder="Confirm your password">
+                        <span class="has-error" th:if="${#fields.hasErrors('passwordconfirm')}"
+                              th:errors="*{passwordconfirm}"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" th:field="*{bankaccountnumber}" required pattern="^[A-Za-z0-9]+$"
+                               class="form-control" placeholder="Bank Account Number">
+                        <span class="has-error" th:if="${#fields.hasErrors('*{bankaccountnumber}')}"
+                            th:errors="*{bankaccountnumber}"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">Create an account</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

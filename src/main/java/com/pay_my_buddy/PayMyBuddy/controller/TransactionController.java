@@ -1,27 +1,25 @@
 package com.pay_my_buddy.PayMyBuddy.controller;
 
 import com.pay_my_buddy.PayMyBuddy.data.BankAccountDAO;
-import com.pay_my_buddy.PayMyBuddy.model.CustomUserDetails;
-import com.pay_my_buddy.PayMyBuddy.model.Transaction;
-import com.pay_my_buddy.PayMyBuddy.model.User;
 import com.pay_my_buddy.PayMyBuddy.exception.BankTransactionException;
-import com.pay_my_buddy.PayMyBuddy.model.SendMoneyForm;
+import com.pay_my_buddy.PayMyBuddy.model.*;
+import com.pay_my_buddy.PayMyBuddy.service.TransactionService;
 import com.pay_my_buddy.PayMyBuddy.service.UserDetailService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @AllArgsConstructor
-@Controller
+@RestController
 public class TransactionController {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
@@ -30,6 +28,8 @@ public class TransactionController {
     private BankAccountDAO bankAccountDAO;
 
     private final UserDetailService userDetailsService;
+
+    private final TransactionService transactionService;
 
 
     /**
@@ -58,5 +58,12 @@ public class TransactionController {
             return new ModelAndView("/home");
         }
         return new ModelAndView("redirect:/home");
+    }
+
+
+    @GetMapping("/bill")
+    public BillDTO getFacture(int userId,
+                              @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  @NotNull Date date) {
+        return this.transactionService.getTransactionByUserIdAndDate(userId, date);
     }
 }
