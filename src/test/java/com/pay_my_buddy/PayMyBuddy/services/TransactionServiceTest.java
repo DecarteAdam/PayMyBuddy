@@ -2,6 +2,7 @@ package com.pay_my_buddy.PayMyBuddy.services;
 
 import com.pay_my_buddy.PayMyBuddy.data.BankAccountDAO;
 import com.pay_my_buddy.PayMyBuddy.data.BankAccountRepository;
+import com.pay_my_buddy.PayMyBuddy.data.TransactionRepository;
 import com.pay_my_buddy.PayMyBuddy.data.UserRepository;
 import com.pay_my_buddy.PayMyBuddy.exception.BankTransactionException;
 import com.pay_my_buddy.PayMyBuddy.model.Transaction;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,8 @@ public class TransactionServiceTest {
     UserRepository userRepository;
     @Autowired
     BankAccountRepository bankAccountRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
     @Autowired
     BankAccountDAO bankAccountDAO;
     @Autowired
@@ -48,7 +52,7 @@ public class TransactionServiceTest {
         Optional<User> userTo = this.userRepository.findById(2);
 
         assertEquals(1300, userTo.get().getAccount().getBalance());
-        assertEquals(700, userFrom.get().getAccount().getBalance());
+        assertEquals(698.5, userFrom.get().getAccount().getBalance());
     }
 
 
@@ -100,6 +104,25 @@ public class TransactionServiceTest {
         List<Transaction> transaction = transactionActual.getContent();
 
         assertEquals(transactionEx.getAmount(), transaction.get(0).getAmount());
+    }
+
+    @Test
+    @DisplayName("Get transactions fees amount")
+    public void getTransactionsAmount() throws BankTransactionException {
+
+        Transaction transaction1 = new Transaction();
+        transaction1.setFees(0.5);
+        Transaction transaction2 = new Transaction();
+        transaction2.setFees(0.5);
+
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(transaction1);
+        transactions.add(transaction2);
+
+
+        double amount = this.transactionService.transactionAmount(transactions);
+
+        assertEquals(1, amount);
     }
 
 }
