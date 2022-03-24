@@ -97,6 +97,7 @@ public class UserDetailService implements UserDetailsService {
         }
 
         User user1 = convertToEntity(userFormDTO);
+        user1.getAccount().setBalance(10000);
 
         this.saveUser(user1, userFormDTO);
 

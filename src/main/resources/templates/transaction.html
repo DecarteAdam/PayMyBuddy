@@ -34,14 +34,15 @@
         <div class="footer-center">
             <footer style="font-size: large; align-items: center;display: flex;" class="panel-footer">
 
-                <div class="footer-center">
+                <div class="footer-center" th:if="${totalPages > 1}">
                     <div class="page" th:style="'border-radius: 5px 0 0 5px'">
                         <a th:if="${currentPage > 1}" th:href="@{'/home/page/' + ${currentPage -1}}"> << </a>
                         <span th:unless="${currentPage > 1}"></span>
                     </div>
 
                     <div class="page" th:each="i: ${#numbers.sequence(1, totalPages)}">
-                        <a th:href="@{'/home/page/' + ${i}}">[[${i}]]</a>
+                        <a th:if="${currentPage != i}" th:href="@{'/home/page/' + ${i}}">[[${i}]]</a>
+                        <span th:unless="${currentPage != i}">[[${i}]]</span>
                     </div>
 
                     <div class="page" th:style="'border-radius: 0 5px 5px 0'">
