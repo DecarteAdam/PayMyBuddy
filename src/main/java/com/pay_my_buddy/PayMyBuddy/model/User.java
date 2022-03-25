@@ -31,7 +31,7 @@ public class User {
     private String role;
 
     @OneToOne
-    @JoinColumn(name = "bank_account_id", referencedColumnName = "id")
+    @JoinColumn(name = "bank_account_id", referencedColumnName = "id", unique = true)
     private BankAccount account;
 
     @ManyToMany
