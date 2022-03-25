@@ -61,6 +61,7 @@ public class UserDetailService implements UserDetailsService {
         BankAccount bankAccount = new BankAccount();
         bankAccount.setFirstname(user.getFirstname());
         bankAccount.setLastname(user.getLastname());
+        bankAccount.setBalance(10000);
         bankAccount.setBankAccountNumber(userFormDTO.getBankaccountnumber());
         this.bankAccountRepository.save(bankAccount);
 

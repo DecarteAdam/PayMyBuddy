@@ -25,7 +25,7 @@ public class TransactionService {
      * Get list of transaction for user
      */
     public Page<Transaction> getTransactions(int pageNumber, int userId){
-        Pageable pageable = PageRequest.of(pageNumber -1,3);
+        Pageable pageable = PageRequest.of(pageNumber -1  ,3);
         return transactionRepository.findByUserIdOrderByDateDesc(pageable, userId);
     }
 
